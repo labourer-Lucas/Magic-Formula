@@ -24,15 +24,14 @@ This repo is based on [yfinance]([ranaroussi/yfinance: Download market data from
 
 ## Dependency
 
-Install `yfinance` using `pip`:
-
-```{.sourceCode
-$ pip install yfinance --upgrade --no-cache-dir
+Install dependencies using `pip`:
+```bash
+pip install -r requirements.txt
 ```
 
 ## Quick Start
 
-You just need to simply change the variable `stock` in `MagicFormula.py` to the company you prefer:
+You just need to simply change the variable `stock` in [`MagicFormula.py`](src\MagicFormula.py) to the company you prefer:
 
 ```python
 stocks = ["AXP", "AAPL", "BA", "CAT", "CVX", "CSCO", "DIS", "DOW", "XOM",
@@ -42,3 +41,4 @@ stocks = ["AXP", "AAPL", "BA", "CAT", "CVX", "CSCO", "DIS", "DOW", "XOM",
 
 and the run the code.
 
+[`MaigcFormula_Russell3000.py`](src\MaigcFormula_Russell3000.py) gives an example of companies in Russell 3000.
