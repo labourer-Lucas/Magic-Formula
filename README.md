@@ -42,3 +42,5 @@ stocks = ["AXP", "AAPL", "BA", "CAT", "CVX", "CSCO", "DIS", "DOW", "XOM",
 and the run the code.
 
 [`MaigcFormula_Russell3000.py`](src\MaigcFormula_Russell3000.py) gives an example of companies in Russell 3000.
+
+[`Rusell3000Collect.py`](src\Rusell3000Collect.py) is use to scrape the holdings of [iShares Russell 3000 ETF](https://www.ishares.com/us/products/239714/ishares-russell-3000-etf). Thanks to 

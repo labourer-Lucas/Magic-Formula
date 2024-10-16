@@ -1,16 +1,22 @@
 import yfinance as yf
 import pandas as pd
+from datetime import datetime
+stock_data = pd.read_csv("data/Nasdaq-100.csv")#Read Russell 3000 holdings
+stocks = stock_data['ticker'].tolist()
+timeStamp = datetime.now().strftime('%Y%m%d')
 
+
+# Optionally, use yfinance to get market cap for validation or additional data
 # Define the stock tickers
-# stocks = ["AXP", "AAPL", "BA", "CAT", "CVX", "CSCO", "DIS", "DOW", "XOM",
-#           "HD", "IBM", "INTC", "JNJ", "KO", "MCD", "MMM", "MRK", "MSFT",
-#           "NKE", "PFE", "PG", "TRV", "UNH", "VZ", "V", "WMT", "WBA","TSLA","HTHT"]
-stocks = ["QQQ"]
+# stocks = ["AXP", "AAPL", "BA", "CAT", "CVX", "CSCO", "DIS", "DOW", "XOM","HD", "IBM", "INTC", "JNJ", "KO", "MCD", "MMM", "MRK", "MSFT","NKE", "PFE", "PG", "TRV", "UNH", "VZ", "V", "WMT", "WBA","TSLA","HTHT"]
+# stocks = ["AAPL"]
 # Dictionary to store thenvalues
+stockLength=len(stocks)
+stockCount=0
 data = []
-
 # Loop through each stock ticker
 for ticker in stocks:
+    stockCount=stockCount+1
     try:
         # Fetch the financial data using yfinance
         stock = yf.Ticker(ticker)
@@ -23,6 +29,8 @@ for ticker in stocks:
                 # EBIT = Net Income + Interest Expense + Income Tax Expense (If available)
                 latest_ebit = income_statement.loc['EBIT'].iloc[0]
                 # print(f"{ticker}'s EBIT is {latest_ebit}")
+                if latest_ebit<0:
+                    latest_ebit = None
             except KeyError:
                 latest_ebit = None
         else:
@@ -46,22 +54,25 @@ for ticker in stocks:
         eps_ttm = stock.info['trailingEps']
         # Calculate Earnings Yield
         earnings_yield = (eps_ttm / current_price) 
-        data.append({'Ticker': ticker, 'EBIT': latest_ebit,'Total current asstes':total_current_assets,'Current Liabilities':current_liabilities,'Net PPE':net_ppe,'Earning Yields':earnings_yield})
-        print("Data successfully scraped for ", ticker)
+        data.append({'Ticker': ticker, 'Price':current_price,'EBIT': latest_ebit,'Total current asstes':total_current_assets,'Current Liabilities':current_liabilities,'Net PPE':net_ppe,'Earning Yields':earnings_yield})
+        print("Data successfully scraped for ", ticker,"No. ",stockCount," of ",stockLength)
     except:
-        print("Problem scraping data for ",ticker)
+        print("Problem scraping data for ",ticker,"No. ",stockCount," of ",stockLength)
 
 # Convert the data to a DataFrame
 data_df = pd.DataFrame(data)
+# Delete incomplete tickers
 nan_rows = data_df[data_df.isna().any(axis=1)]
 print("Rows with NaN values:\n", nan_rows)
-# Step 2: Drop rows with any NaN values
+#Drop rows with any NaN values
 data_df = data_df.dropna()
+
 # calculate return on capital
 data_df["ROC"]=data_df["EBIT"]/(data_df["Net PPE"]+data_df["Total current asstes"]-data_df["Current Liabilities"])
 # Display the DataFrame
 print("\n DataFrame:")
 print(data_df)
+#Magic Formula Ranking
 stocks_index = data_df.columns
 print(stocks_index)
 data_df_rank = data_df
@@ -74,7 +85,7 @@ print("------------------------------------------------")
 print("Value stocks based on Greenblatt's Magic Formula")
 df = value_stocks.fillna(0)
 print(df)
-file_path = "magic_formula_rank.xlsx"  # Replace with your desired file path
+file_path = "result/magic_formula_rank_"+timeStamp +"_Nasdaq100.xlsx" # Replace with your desired file path
 # Save the DataFrame to an Excel file
 df.to_excel(file_path, index=False)
 print(f"DataFrame saved to {file_path}")

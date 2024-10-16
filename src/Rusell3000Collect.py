@@ -9,7 +9,8 @@ import requests
 # ---------------------------------------------------------------------------------------------
 etf_landing_page = 'https://www.ishares.com/us/products/239714/ishares-russell-3000-etf'
 start_date = '2024-08-15'
-end_date = datetime.now().strftime('%Y-%m-%d')
+# end_date = datetime.now().strftime('%Y-%m-%d')
+end_date= '2024-08-26'
 output_file = 'Russell-3000.csv'
 # ---------------------------------------------------------------------------------------------
 
